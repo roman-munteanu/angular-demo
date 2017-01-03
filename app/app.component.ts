@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { User } from './shared/models/user';
 
 @Component({
     selector: 'my-app',
@@ -11,28 +12,47 @@ import { Component } from '@angular/core';
         </nav>
     </header>
     <main>
-        <div class="jumbotron">
-          <h1>Welcome!</h1>
-          <p>message: {{ message }}</p>
+        <div class="row">
+            <div class="col-sm-4">
+                <ul class="list-group users-list" *ngIf="users">
+                    <li class="list-group-item"
+                        *ngFor="let user of users"
+                        (click)="selectUser(user)"
+                        [class.active]="user === activeUser">
+                        {{user.name}} <b>{{user.email}}</b>
+                    </li>
+                </ul>
+            </div>
+            <div class="col-sm-8">
+                <div class="jumbotron" *ngIf="!activeUser">
+                    <h2>{{ message }}</h2>
+                </div>
+                <div class="jumbotron" *ngIf="activeUser">
+                  <h2>{{ activeUser.name }} <small>{{ activeUser.email }}</small></h2>
+                </div>
+            </div>
         </div>
-        <ul>
-            <li *ngFor="let user of users">{{user.name}} <b>{{user.email}}</b></li>
-        </ul>
     </main>
     <footer>
         &copy; 2017 highlander
     </footer>
-  `,
+    `,
     styles: [`
-    .jumbotron { box-shadow: 0 2px 0 rgba(0, 0, 0, 0.2); }
+    .users-list li {
+        cursor: pointer;
+    }
   `]
 })
 
 export class AppComponent {
-    message = 'Test!';
-    users = [
+    message: string = 'Please choose a User';
+    users: User[] = [
         {id: 1, name: "Alice Parker", email: "ap@test.com"},
         {id: 2, name: "Tom Green", email: "tg@test.com"},
         {id: 3, name: "Jack Black", email: "jb@test.com"}
     ];
+    activeUser: User;
+    selectUser(user) {
+        this.activeUser = user;
+    }
 }
