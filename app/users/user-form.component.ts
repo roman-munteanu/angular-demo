@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { User } from '../shared/models/user';
 
 @Component({
@@ -12,19 +12,31 @@ import { User } from '../shared/models/user';
         }
     `],
     template: `
-        <form #form="ngForm">
+        <form #form="ngForm" (ngSubmit)="onSubmit()" [ngClass]="{ 'has-error': name.invalid && name.touched }">
             {{ form.valid }}
             <div class="form-group">
                 <input type="text" name="name" class="form-control" placeholder="name" required [(ngModel)]="newUser.name" #name="ngModel" />
+                <span class="help-block" *ngIf="name.invalid && name.touched">Name is required.</span>
             </div>
-            <div class="form-group">
-                <input type="text" name="email" class="form-control" placeholder="e-mail" required [(ngModel)]="newUser.name" #name="ngModel" />
+            <div class="form-group" [ngClass]="{ 'has-error': email.invalid && email.touched }">
+                <input type="text" name="email" class="form-control" placeholder="e-mail" required [(ngModel)]="newUser.email" #email="ngModel" />
+                <span class="help-block" *ngIf="email.invalid && email.touched">E-mail is required.</span>
             </div>
-            <button type="submit" class="btn btn-lg btn-block btn-primary">Create User</button>
+            <button type="submit" class="btn btn-lg btn-block btn-primary" [disabled]="form.invalid">Create User</button>
         </form>
     `
 })
 
 export class UserFormComponent {
+
+    @Output() userCreated = new EventEmitter();
+
     newUser: User = new User();
+    active: boolean = true;
+
+    onSubmit() {
+        this.userCreated.emit({ user: this.newUser });
+        this.newUser = new User();
+        setTimeout(() => this.active = true, 0);
+    }
 }

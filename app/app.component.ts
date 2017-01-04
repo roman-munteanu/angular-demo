@@ -18,4 +18,8 @@ export class AppComponent {
     selectUser(user) {
         this.activeUser = user;
     }
+
+    onUserCreated(event) {
+        this.users.push(event.user);
+    }
 }

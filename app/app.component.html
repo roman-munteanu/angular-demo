@@ -16,13 +16,17 @@
                     {{user.name}} <b>{{user.email}}</b>
                 </li>
             </ul>
-            <user-form></user-form>
+
+            <user-form (userCreated)="onUserCreated($event)"></user-form>
+
         </div>
         <div class="col-sm-8">
             <div class="jumbotron" *ngIf="!activeUser">
                 <h2>{{ message }}</h2>
             </div>
+
             <user-profile [user]="activeUser"></user-profile>
+
         </div>
     </div>
 </main>
